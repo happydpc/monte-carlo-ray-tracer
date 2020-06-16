@@ -2,6 +2,10 @@
 
 This is a physically based renderer with Path Tracing and Photon Mapping.
 
+<div about="renders/stanford_dragon.jpg">
+  <img src="renders/stanford_dragon.jpg" alt="Path traced render of the stanford dragon, 871 414 triangles." title="Path traced render of the stanford dragon, 871 414 triangles." />
+  <a rel="license" href="https://creativecommons.org/licenses/by/4.0/"></a>
+</div>
 <div about="renders/quadric.jpg">
   <img src="renders/quadric.jpg" alt="Path traced render of scene with only quadric surfaces" title="Path traced render of scene with only quadric surfaces" />
   <a rel="license" href="https://creativecommons.org/licenses/by/4.0/"></a>
@@ -70,7 +74,7 @@ The `ior` field specifies the scene IOR (index of refraction). This can be used 
 
 The `photon_map`, `cameras`, `materials`, `vertices`, and `surfaces` objects defines different render settings and the scene contents. I will go through each of these in the following sections.
 
-<details><summary><strong>Photon Map Object</strong></summary><br>
+<details><summary><code>Photon Map</code></summary><br>
 
 Example:
 ```json
@@ -95,7 +99,7 @@ The `max_photons_per_octree_leaf` field affects both the octree radius-search pe
 The `direct_visualization` field can be used to visualize the photon maps directly. Setting this to true will make the program evaluate the global radiance from all photon maps at the first diffuse reflection. An example of this is in the report. 
 </details><br>
 
-<details><summary><strong>Cameras Object</strong></summary><br>
+<details><summary><code>Cameras</code></summary><br>
 
 Example:
 ```json
@@ -152,7 +156,7 @@ The program also has a histogram-based auto-gain method which is applied after a
 The reason for separating these steps is that the tone-mapping/camera response is non-linear, and as a result `exposure_compensation` mostly controls the camera response (contrast, dynamic range etc.) while `gain_compensation` controls the overall image intensity. The tonemapping operator used by the program is the [filmic tonemapper](http://filmicworlds.com/blog/filmic-tonemapping-operators/) developed by John Hable.
 </details><br>
 
-<details><summary><strong>Materials Object</strong></summary><br>
+<details><summary><code>Materials</code></summary><br>
 
 Example:
 ```json
@@ -202,7 +206,7 @@ The `reflectance` and `specular_reflectance` fields specifies the amount of radi
 The `emittance` field defines the radiant flux of each RGB channel in watts. This means that surfaces with different surface areas will emit the same amount of radiant energy if they are assigned the same emissive material.
 </details><br>
 
-<details><summary><strong>Vertices Object</strong></summary><br>
+<details><summary><code>Vertices</code></summary><br>
 
 Example:
 ```json
@@ -228,7 +232,7 @@ The `vertices` object contains a map of vertex sets. Each vertex set contains an
 The vertex set key string is used later to specify which set of vertices to build the surface from when creating surfaces of `object` type.
 </details><br>
 
-<details><summary><strong>Surfaces Object</strong></summary><br>
+<details><summary><code>Surfaces</code></summary><br>
 
 Example:
 ```json
