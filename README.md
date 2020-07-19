@@ -2,12 +2,12 @@
 
 This is a physically based renderer with Path Tracing and Photon Mapping.
 
-<div about="renders/stanford_dragon_frosted.jpg">
-  <img src="renders/stanford_dragon_frosted.jpg" alt="Path traced render of the Stanford dragon with a frosted glass material, 871 414 triangles." title="Path traced render of the Stanford dragon with a frosted glass material, 871 414 triangles." />
+<div about="renders/stanford_dragon_frosted_2.jpg">
+  <img src="renders/stanford_dragon_frosted_2.jpg" alt="Path traced render of the Stanford dragon with a frosted glass material, backlit by an incandescent sphere. 871 414 triangles." title="Path traced render of the Stanford dragon with a frosted glass material, backlit by an incandescent sphere. 871 414 triangles." />
   <a rel="license" href="https://creativecommons.org/licenses/by/4.0/"></a>
 </div>
 <div about="renders/quadric.jpg">
-  <img src="renders/quadric.jpg" alt="Path traced render of scene with only quadric surfaces" title="Path traced render of scene with only quadric surfaces" />
+  <img src="renders/quadric.jpg" alt="Path traced render of a scene containing only quadric surfaces." title="Path traced render of a scene containing only quadric surfaces" />
   <a rel="license" href="https://creativecommons.org/licenses/by/4.0/"></a>
 </div>
 <div about="renders/caustics.jpg">
@@ -15,24 +15,24 @@ This is a physically based renderer with Path Tracing and Photon Mapping.
   <a rel="license" href="https://creativecommons.org/licenses/by/4.0/"></a>
 </div>
 
-This program was initially developed over a period of about 2 months for the course [Advanced Global Illumination and Rendering (TNCG15)](https://liu.se/studieinfo/kurs/tncg15) at Linköpings Universitet. I have however continued developing it by adding features such as depth of field and quadric surfaces. The program is written in C++ and requires a compiler with C++17 support. The only dependencies are the header-only libraries [GLM](https://glm.g-truc.net/) and [nlohmann::json](https://github.com/nlohmann/json), which are included in the repository.
+This program was initially developed over a period of about 2 months for the course [Advanced Global Illumination and Rendering (TNCG15)](https://liu.se/studieinfo/kurs/tncg15) at Linköpings Universitet. I have however continued developing it by adding features such as depth of field and quadric surfaces. 
+
+The program is written in C++ and requires a compiler with C++17 support. The only dependencies are the header-only libraries [GLM](https://glm.g-truc.net/) and [nlohmann::json](https://github.com/nlohmann/json), which are included in the repository.
 
 ## Building
-Clone the repository using the following [git](https://git-scm.com/) command in your terminal:
+Clone the repository using the following [git](https://git-scm.com/) command:
 ```
 git clone https://github.com/linusmossberg/monte-carlo-ray-tracer
 ```
 Next, install [CMake](https://cmake.org/download/) and open the included GUI application. Enter the `monte-carlo-ray-tracer` directory as source directory and select a build directory. Click `Configure` and continue with the instructions for your platform:
 
-### Linux/macOS
-Select the `Unix Makefiles` generator and click `Finish`. Click `Generate` to generate a makefile, which then can be built by running the command `make -j` in the build directory.
+**Linux/macOS:** Select the `Unix Makefiles` generator and click `Finish`. Click `Generate` to generate a makefile, which then can be built by running the command `make` in the build directory.
 
-### Windows
-Select the `Visual Studio 15 2017` generator or later with the `x64` platform and click `Finish`. Click `Generate` to generate a visual studio solution file, which then can be opened and built in visual studio.
+**Windows:** Select the `Visual Studio 15 2017` generator or later with the `x64` platform and click `Finish`. Click `Generate` to generate a visual studio solution file, which then can be opened and built in visual studio.
 
 ## Usage
 
-For basic use, just run the program in the directory that contains the *scenes* directory, i.e. the root folder of this repository. The program will then parse all scene files and create several rendering options to choose from in the terminal. For more advanced use, see [scene format](#scene-format).
+For basic use, just run the program in the directory that contains the *scenes* directory, i.e. the root folder of this repository. The program will then parse all scene files and create several rendering options to choose from in the terminal. It is also possible to supply a command line argument with the path to the scenes directory. For more advanced use, see [scene format](#scene-format).
 
 ## Scene Format
 
@@ -89,7 +89,7 @@ The `max_photons_per_octree_leaf` field affects both the octree search performan
 The `use_shadow_photons` field specifies whether to use shadow photons. Shadow photons are used to determine if it's necessary to cast shadow rays or delay the global radiance evaluation in certain situations. This can improve performance and reduce artifacts in some scenes and do the opposite in other.
 
 The `direct_visualization` field can be used to visualize the photon maps directly. Setting this to true will make the program evaluate the global radiance from all photon maps at the first diffuse reflection. An example of this is in the report.
-</details><br>
+</details>
 
 ___
 
@@ -116,7 +116,7 @@ Normal naive scene intersection is used if this object is not specified. The `ty
 I've also tried splitting along all three axes each recursion to create octonary-trees. This produces good results but there's not much of an improvement compared to the quaternary version and the construction time becomes much longer due to the dimensionality curse when using 3D bins.
 
 `quaternary_sah` takes the longest to construct but tends to produce the best results. `octree` and `binary_sah` are faster to construct which is useful for quick renders. This is especially the case for the octree method, which surprisingly seems to be both faster to construct and create higher quality trees than the binary-tree SAH method.
-</details><br>
+</details>
 
 ___
 
@@ -175,14 +175,14 @@ The `savename` property defines the name of the resulting saved image file. Imag
 
 The `image` object specifies the image properties of the camera. The `width` and `height` ´fields specifies the image resolution in pixels.
 
-The `tonemapper` field specifies which tonemapper to use. The available ones are `Hable` ([filmic tonemapper by John Hable](http://filmicworlds.com/blog/filmic-tonemapping-operators/)) and `ACES` ([fitted by Stephen Hill](https://twitter.com/self_shadow)). The default tonemapper is `Hable`.
+The `tonemapper` field specifies which tonemapper to use. The available ones are `Hable` ([filmic tonemapper by John Hable](http://filmicworlds.com/blog/filmic-tonemapping-operators/)) and `ACES` ([fitted by Stephen Hill](https://twitter.com/self_shadow)).
 
 The program has histogram-based auto-exposure which centers the histogram around the 0.5 intensity level before applying tone mapping (corresponding to controlling the amount of light that reaches the film/sensor). This can be offset with the optional `exposure_compensation` field, which specifies the [exposure compensation](https://en.wikipedia.org/wiki/Exposure_compensation) in EV units (stops). 
 
 The program also has a histogram-based auto-gain method which is applied after auto-exposure and tone-mapping, which instead tries to position the histogram of the resulting image to the right. This can similarly be offset with the optional `gain_compensation` field, which is also specified in EV units.
 
 The reason for separating these steps is that the tone-mapping/camera response is non-linear, and as a result `exposure_compensation` mostly controls the camera response (contrast, dynamic range etc.) while `gain_compensation` controls the overall image intensity.
-</details><br>
+</details>
 
 ___
 
@@ -196,6 +196,9 @@ Example:
   "default": {
       "reflectance": 0.73,
       "roughness": 10.0
+  },
+  "iron": {
+    "ior": "data/spectral-distributions/iron.csv"
   },
   "silver": {
     "specular_roughness": 0.06,
@@ -214,9 +217,6 @@ Example:
     "specular_reflectance": 0.5,
     "ior": 1.333,
     "reflectance": "#80B1D3"
-  },
-  "iron": {
-    "ior": "data/Johnson.csv"
   },
   "light": {
     "reflectance": 0.9,
@@ -258,7 +258,7 @@ The `real` part is often called *n* and it represents the usual index of refract
 
 The `imaginary` part is often called *k* and it represents the absorption coefficient. The imaginary part is non-zero for conductives and zero for dielectrics, which means that conductives rapidly absorbs the transmitted radiance while dielectrics let it pass through.
 
-Spectral distributions of these values are available at [refractiveindex.info](https://refractiveindex.info/). These spectral distributions can be reduced to linear RGB by integrating the product of the spectral distributions and each of the CIE color matching functions over the visible spectrum, and then converting the resulting XYZ tristimulus values to linear RGB. The program does this automatically if a path to a downloaded CSV file with spectral data is provided for the `ior` field, but I also wrote the following MATLAB script to get the values directly:
+Spectral distributions of these values are available at [refractiveindex.info](https://refractiveindex.info/). These spectral distributions can be reduced to linear RGB by integrating the product of the spectral distributions and each of the CIE color matching functions over the visible spectrum, and then converting the resulting XYZ tristimulus values to linear RGB. The program does this automatically if a path to a downloaded CSV file with spectral data is provided for the `ior` field, but I also wrote the following MATLAB script to get the RGB values directly:
 
 ```matlab
 % Read CIE cmfs, http://cvrl.ioo.ucl.ac.uk/cmfs.htm
@@ -307,7 +307,7 @@ and the same for `Y` and `Z`. The constant illuminant is also the reason why the
   <a rel="license" href="https://creativecommons.org/licenses/by/4.0/"></a>
 </div>
 
-</details><br>
+</details>
 
 ___
 
@@ -335,7 +335,7 @@ Example:
 ```
 
 Each vertex set contains an array of vertices specified as xyz-coordinates. The vertex set key string is used later to specify which set of vertices to build the surface from when creating surfaces of `object` type.
-</details><br>
+</details>
 
 ___
 
@@ -435,21 +435,21 @@ Quadric surfaces currently do not support emissive materials (the emissive part 
 
 ___
 <sup>1</sup> The usual quadric equation looks slightly different when it's derived from the quadric matrix representation *p<sup>T</sup>Qp* since this results in some constants being doubled. The program uses this representation internally, but I've eliminated this in the scene format since it's easier to not have to think about whether or not some constants will be doubled when creating a surface.
-</details><br>
+</details>
 
 ___
 
 ## Renders
-<div about="renders/metal_bunnies.jpg">
-  <img src="renders/metal_bunnies.jpg" alt="Path traced render of the Stanford bunny with different rough metal materials, 864 348 triangles." title="Path traced render of the Stanford bunny with different rough metal materials, 864 348 triangles." />
+<div about="renders/hexagon-room-flint-glass.jpg">
+  <img src="renders/hexagon-room-flint-glass.jpg" alt="Path traced render of hexagon room suspended in flint glass (1.75 scene IOR)." title="Path traced render of hexagon room suspended in flint glass (1.75 scene IOR)." />
   <a rel="license" href="https://creativecommons.org/licenses/by/4.0/"></a>
 </div>
 <div about="renders/stanford_dragon.jpg">
-  <img src="renders/stanford_dragon.jpg" alt="Path traced render of the Stanford bunny with different rough metal materials, 864 348 triangles." title="Path traced render of the Stanford bunny with different rough metal materials, 864 348 triangles." />
+  <img src="renders/stanford_dragon.jpg" alt="Path traced render of the Stanford dragon." title="Path traced render of the Stanford dragon." />
   <a rel="license" href="https://creativecommons.org/licenses/by/4.0/"></a>
 </div>
-<div about="renders/hexagon-room-flint-glass.jpg">
-  <img src="renders/hexagon-room-flint-glass.jpg" alt="Path traced render of hexagon room suspended in flint glass (1.75 scene IOR)." title="Path traced render of hexagon room suspended in flint glass (1.75 scene IOR)." />
+<div about="renders/metal_bunnies.jpg">
+  <img src="renders/metal_bunnies.jpg" alt="Path traced render of the Stanford bunny with different rough metal materials, 864 348 triangles." title="Path traced render of the Stanford bunny with different rough metal materials, 864 348 triangles." />
   <a rel="license" href="https://creativecommons.org/licenses/by/4.0/"></a>
 </div>
 
