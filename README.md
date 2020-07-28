@@ -89,7 +89,7 @@ The `max_photons_per_octree_leaf` field affects both the octree search performan
 The `use_shadow_photons` field specifies whether to use shadow photons. Shadow photons are used to determine if it's necessary to cast shadow rays or delay the global radiance evaluation in certain situations. This can improve performance and reduce artifacts in some scenes and do the opposite in other.
 
 The `direct_visualization` field can be used to visualize the photon maps directly. Setting this to true will make the program evaluate the global radiance from all photon maps at the first diffuse reflection. An example of this is in the report.
-</details>
+</details><br>
 
 ___
 
@@ -116,7 +116,7 @@ Normal naive scene intersection is used if this object is not specified. The `ty
 I've also tried splitting along all three axes each recursion to create octonary-trees. This produces good results but there's not much of an improvement compared to the quaternary version and the construction time becomes much longer due to the dimensionality curse when using 3D bins.
 
 `quaternary_sah` takes the longest to construct but tends to produce the best results. `octree` and `binary_sah` are faster to construct which is useful for quick renders. This is especially the case for the octree method, which surprisingly seems to be both faster to construct and create higher quality trees than the binary-tree SAH method.
-</details>
+</details><br>
 
 ___
 
@@ -182,7 +182,7 @@ The program has histogram-based auto-exposure which centers the histogram around
 The program also has a histogram-based auto-gain method which is applied after auto-exposure and tone-mapping, which instead tries to position the histogram of the resulting image to the right. This can similarly be offset with the optional `gain_compensation` field, which is also specified in EV units.
 
 The reason for separating these steps is that the tone-mapping/camera response is non-linear, and as a result `exposure_compensation` mostly controls the camera response (contrast, dynamic range etc.) while `gain_compensation` controls the overall image intensity.
-</details>
+</details><br>
 
 ___
 
@@ -315,7 +315,7 @@ and the same for `Y` and `Z`. The constant illuminant is also the reason why the
   <a rel="license" href="https://creativecommons.org/licenses/by/4.0/"></a>
 </div>
 
-</details>
+</details><br>
 
 ___
 
@@ -343,7 +343,7 @@ Example:
 ```
 
 Each vertex set contains an array of vertices specified as xyz-coordinates. The vertex set key string is used later to specify which set of vertices to build the surface from when creating surfaces of `object` type.
-</details>
+</details><br>
 
 ___
 
@@ -443,7 +443,7 @@ Quadric surfaces currently do not support emissive materials (the emissive part 
 
 ___
 <sup>1</sup> The usual quadric equation looks slightly different when it's derived from the quadric matrix representation *p<sup>T</sup>Qp* since this results in some constants being doubled. The program uses this representation internally, but I've eliminated this in the scene format since it's easier to not have to think about whether or not some constants will be doubled when creating a surface.
-</details>
+</details><br>
 
 ___
 
