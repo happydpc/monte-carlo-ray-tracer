@@ -11,7 +11,7 @@ This is a physically based renderer with Path Tracing and Photon Mapping.
   <a rel="license" href="https://creativecommons.org/licenses/by/4.0/"></a>
 </div>
 <div about="renders/caustics.jpg">
-  <img src="renders/caustics.jpg" alt="Photon mapped render of caustics, 6.6 million triangles and 157 million photon particles. Original scene by Benedikt Bitterli." title="Photon mapped render of caustics, 6.6 million triangles and 157 million photon particles. Original scene by Benedikt Bitterli." />
+  <img src="renders/caustics.jpg" alt="Photon mapped render of caustics, 6.6 million triangles and 164 million photon particles. Original scene by Benedikt Bitterli." title="Photon mapped render of caustics, 6.6 million triangles and 164 million photon particles. Original scene by Benedikt Bitterli." />
   <a rel="license" href="https://creativecommons.org/licenses/by/4.0/"></a>
 </div>
 
@@ -89,7 +89,7 @@ The `max_photons_per_octree_leaf` field affects both the octree search performan
 The `use_shadow_photons` field specifies whether to use shadow photons. Shadow photons are used to determine if it's necessary to cast shadow rays or delay the global radiance evaluation in certain situations. This can improve performance and reduce artifacts in some scenes and do the opposite in other.
 
 The `direct_visualization` field can be used to visualize the photon maps directly. Setting this to true will make the program evaluate the global radiance from all photon maps at the first diffuse reflection. An example of this is in the report.
-</details><br>
+</details>
 
 ___
 
@@ -116,7 +116,7 @@ Normal naive scene intersection is used if this object is not specified. The `ty
 I've also tried splitting along all three axes each recursion to create octonary-trees. This produces good results but there's not much of an improvement compared to the quaternary version and the construction time becomes much longer due to the dimensionality curse when using 3D bins.
 
 `quaternary_sah` takes the longest to construct but tends to produce the best results. `octree` and `binary_sah` are faster to construct which is useful for quick renders. This is especially the case for the octree method, which surprisingly seems to be both faster to construct and create higher quality trees than the binary-tree SAH method.
-</details><br>
+</details>
 
 ___
 
@@ -182,7 +182,7 @@ The program has histogram-based auto-exposure which centers the histogram around
 The program also has a histogram-based auto-gain method which is applied after auto-exposure and tone-mapping, which instead tries to position the histogram of the resulting image to the right. This can similarly be offset with the optional `gain_compensation` field, which is also specified in EV units.
 
 The reason for separating these steps is that the tone-mapping/camera response is non-linear, and as a result `exposure_compensation` mostly controls the camera response (contrast, dynamic range etc.) while `gain_compensation` controls the overall image intensity.
-</details><br>
+</details>
 
 ___
 
@@ -207,8 +207,13 @@ Example:
       "imaginary": [4.52084303, 3.61703254, 2.59526494]
     }
   },
+  "water": {
+    "ior": 1.333,
+    "transparency": 1.0
+  },
   "crystal": {
     "ior": 2.0,
+    "external_medium": "water",
     "transparency":  1.0,
     "transmittance": [ 0.5, 1.0, 0.9 ],
     "specular_roughness": 0.1
@@ -234,7 +239,7 @@ The material fields are:
 
 | field                  | type        | default | interval    |
 | ---------------------- | ----------- | ------- | ----------- |
-| `reflectance`          | RGB         | 0       | [0, 1]      |
+| `reflectance`          | RGB         | 1       | [0, 1]      |
 | `specular_reflectance` | RGB         | 1       | [0, 1]      |
 | `transmittance`        | RGB         | 1       | [0, 1]      |
 | `emittance`            | RGB         | 0       | [0, ∞)      |
@@ -242,6 +247,7 @@ The material fields are:
 | `specular_roughness`   | scalar      | 0       | [0, 1]      |
 | `transparency`         | scalar      | 0       | [0, 1]      |
 | `perfect_mirror`       | bool        | 0       | {0, 1}      |
+| `external_medium`      | string      | "scene" | keys        |
 | `ior`                  | [IOR](#ior) | 0       | [IOR](#ior) |
 
 These fields are all optional and any combination of fields can be used. A material can for example be a combination of diffusely reflecting, specularly reflecting, emissive, transmissive (specularly refracting) and rough. If set to true, the `perfect_mirror` field overrides most other fields to simulate a perfect mirror with infinite IOR.
@@ -249,6 +255,8 @@ These fields are all optional and any combination of fields can be used. A mater
 The `reflectance`, `specular_reflectance` and `transmittance` fields specifies the amount of radiance that should be diffusely reflected and specularly reflected/transmitted for each RGB channel. This is a simplification since these are spectral properties that varies with wavelength and not by the resulting tristimulus values of the virtual camera, but this is computationally cheaper and simpler. These properties now take gamma-corrected values and linearizes them internally to make it easier to pick colors via color pickers.
 
 The `emittance` field defines the radiant flux of each RGB channel in watts. This means that surfaces with different surface areas will emit the same amount of radiant energy if they are assigned the same emissive material. It's also possible to set this field to a [CIE standard illuminant](https://en.wikipedia.org/wiki/Standard_illuminant) by specifying an object with an `illuminant` and a `scale` field.
+
+The `external_medium` field can be used to specify the key string of the material that the material is enclosed in. This is required to correctly render scenes with layered transmissive objects (eg. ice cubes with air bubbles in a glass of water). This field is only needed when a ray exits a transmissive object that is enclosed in another transmissive object, and is therefore not required for opaque materials or transmissive materials that only has the scene as external medium.
 
 #### IOR
 
@@ -307,7 +315,7 @@ and the same for `Y` and `Z`. The constant illuminant is also the reason why the
   <a rel="license" href="https://creativecommons.org/licenses/by/4.0/"></a>
 </div>
 
-</details><br>
+</details>
 
 ___
 
@@ -335,7 +343,7 @@ Example:
 ```
 
 Each vertex set contains an array of vertices specified as xyz-coordinates. The vertex set key string is used later to specify which set of vertices to build the surface from when creating surfaces of `object` type.
-</details><br>
+</details>
 
 ___
 
@@ -435,7 +443,7 @@ Quadric surfaces currently do not support emissive materials (the emissive part 
 
 ___
 <sup>1</sup> The usual quadric equation looks slightly different when it's derived from the quadric matrix representation *p<sup>T</sup>Qp* since this results in some constants being doubled. The program uses this representation internally, but I've eliminated this in the scene format since it's easier to not have to think about whether or not some constants will be doubled when creating a surface.
-</details><br>
+</details>
 
 ___
 
@@ -462,9 +470,11 @@ The following resources have been useful the project:
 * [Importance Sampling techniques for GGX with Smith Masking-Shadowing - Joe Schutte](https://schuttejoe.github.io/post/ggximportancesamplingpart2/)
 * [PBR Diffuse Lighting for GGX+Smith Microsurfaces - Earl Hammon](https://twvideo01.ubm-us.net/o1/vault/gdc2017/Presentations/Hammon_Earl_PBR_Diffuse_Lighting.pdf)
 * [Memo on Fresnel Equations - Sébastien Lagarde](https://seblagarde.wordpress.com/2013/04/29/memo-on-fresnel-equations/)
+* [Useful Color Equations - Bruce Lindbloom](http://www.brucelindbloom.com/)
 * [Filmic Tonemapping Operators - John Hable](http://filmicworlds.com/blog/filmic-tonemapping-operators/)
 * [Automatic Exposure - Krzysztof Narkowicz](https://knarkowicz.wordpress.com/2016/01/09/automatic-exposure/)
 * [Better Sampling - Rory Driscoll](http://www.rorydriscoll.com/2009/01/07/better-sampling/)
 * [Introduction to Acceleration Structures - Scratchapixel](https://www.scratchapixel.com/lessons/advanced-rendering/introduction-acceleration-structure/bounding-volume-hierarchy-BVH-part1)
 * [Refractive index database - Mikhail Polyanskiy](https://refractiveindex.info/)
 * [The Stanford 3D Scanning Repository](http://graphics.stanford.edu/data/3Dscanrep/)
+* [Rendering Resources - Benedikt Bitterli](https://benedikt-bitterli.me/resources/)
